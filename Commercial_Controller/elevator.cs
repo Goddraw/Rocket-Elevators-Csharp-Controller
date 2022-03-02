@@ -10,7 +10,7 @@ namespace Commercial_Controller
         public int currentFloor;
         public string direction;
         public Door door;
-        public List<int> floorRequestList;
+        public List<int> floorRequestsList;
         public List<int> completedRequestList;
 
 
@@ -21,45 +21,41 @@ namespace Commercial_Controller
             this.currentFloor = 1;
             this.direction = "none";
             this.door = new Door();
-            this.floorRequestList = new List<int>();
+            this.floorRequestsList = new List<int>();
             this.completedRequestList = new List<int>();
-
-        // public static int AutoIncrementElevatorId = 1;
-        // public int ElevatorId { get; }
-        // public Elevator()
-        // {
-        //     ElevatorId = AutoIncrementElevatorId;
-        //     AutoIncrementElevatorId++;
-        // }
-    }
-    public void move(int calledFloor, string direction)
-    {
-        if (this.currentFloor > calledFloor)
-        {
-            direction = "down";
         }
-        else if (this.currentFloor < calledFloor)
+        public void move()
         {
-
-            direction = "up";
-        }
-        else
-        {
-            direction = null;
-        }
-        while (currentFloor != calledFloor)
-        {
-            if (direction == "up")
+            foreach (int calledFloor in this.floorRequestsList)
             {
-                currentFloor++;
-            }
-            if (direction == "down")
-            {
-                currentFloor--;
-            }
-        }
-        //operate doors       
-    }
+                if (this.currentFloor > calledFloor)
+                {
+                    direction = "down";
+                }
+                else if (this.currentFloor < calledFloor)
+                {
 
-}
+                    direction = "up";
+                }
+                else
+                {
+                    direction = null;
+                }
+                while (currentFloor != calledFloor)
+                {
+                    if (direction == "up")
+                    {
+                        currentFloor++;
+                    }
+                    if (direction == "down")
+                    {
+                        currentFloor--;
+                    }
+                }
+                //operate doors  
+            }
+               
+        }
+
+    }
 }
