@@ -1,84 +1,84 @@
-SET columnID TO 1
+'SET columnID TO 1
 SET elevatorID TO 1
 SET floorRequestButtonID TO 1
 SET callButtonID TO 1
 INIT floor
-DEFINE Battery USING _id AND _amountOfColumns AND _amountOfFloors AND _amountOfBasements AND _amountOfElevatorPerColumn
+'DEFINE Battery USING _id AND _amountOfColumns AND _amountOfFloors AND _amountOfBasements AND _amountOfElevatorPerColumn
     '//---------------------------------Initialization--------------------------------------------//
-    SET ID TO _id
-    SET status TO 'online' 
-    SET columnsList TO EMPTY ARRAY
-    SET floorRequestsButtonsList TO EMPTY ARRAY
-    IF _amountOfBasements IS GREATER THAN 0 THEN
-        CALL THIS createBasementFloorRequestButtons WITH _amountOfBasements
-        CALL THIS createBasementColumn WITH _amountOfBasements AND _amountOfElevatorPerColumn
-        DECREMENT _amountOfColumns
-    ENDIF   
-    CALL THIS createFloorRequestButtons WITH _amountOfFloors
-    CALL THIS createColumns WITH _amountOfColumns AND _amountOfFloors AND _amountOfElevatorPerColumn
+    'SET ID TO _id
+    'SET status TO 'online' 
+    'SET columnsList TO EMPTY ARRAY
+    'SET floorRequestsButtonsList TO EMPTY ARRAY
+    'IF _amountOfBasements IS GREATER THAN 0 THEN
+    ''    CALL THIS createBasementFloorRequestButtons WITH _amountOfBasements
+    ''    CALL THIS createBasementColumn WITH _amountOfBasements AND _amountOfElevatorPerColumn
+    ''    DECREMENT _amountOfColumns
+    'ENDIF   
+    'CALL THIS createFloorRequestButtons WITH _amountOfFloors
+    'CALL THIS createColumns WITH _amountOfColumns AND _amountOfFloors AND _amountOfElevatorPerColumn
     '//---------------------------------Methods--------------------------------------------//
-    SEQUENCE createBasementColumn USING _amountOfBasements AND _amountOfElevatorPerColumn
-        INIT servedFloors TO EMPTY ARRAY
-        SET floor TO -1 
-        FOR _amountOfBasements
-            ADD floor TO servedFloors
-            DECREMENT floor
-        ENDFOR
+    'SEQUENCE createBasementColumn USING _amountOfBasements AND _amountOfElevatorPerColumn
+    ''    INIT servedFloors TO EMPTY ARRAY
+     ''   SET floor TO -1 
+      ''  FOR _amountOfBasements
+       ''     ADD floor TO servedFloors
+        ''    DECREMENT floor
+        ' ENDFOR
         
-        SET column TO NEW Column WITH columnID AND online AND _amountOfBasements AND _amountOfElevatorPerColumn AND servedFloors AND true
-        ADD column TO THIS columnsList
-        INCREMENT columnID
-    ENDSEQUENCE
-    SEQUENCE createColumns USING _amountOfColumns AND _amountOfFloors AND _amountOfBasements AND _amountOfElevatorPerColumn
-        SET amountOfFloorsPerColumn TO ROUND UP (_amountOfFloors / _amountOfColumns) 
-        SET floor TO 1
-        FOR _amountOfColumns
-            SET servedFloors TO EMPTY ARRAY
-            FOR amountOfFloorsPerColumn
-                IF floor IS LESS OR EQUAL TO _amountOfFloors
-                    ADD floor TO servedFloors
-                    INCREMENT floor
-                ENDIF
-            ENDFOR
-            SET column TO NEW Column WITH columnID AND online AND _amountOfFloors AND _amountOfElevatorPerColumn AND servedFloors AND false
-            ADD column TO THIS columnsList
-            INCREMENT columnID
-        ENDFOR
-    ENDSEQUENCE
-    SEQUENCE createFloorRequestButtons USING _amountOfFloors
-        SET buttonFloor TO 1
-        FOR _amountOfFloors
-            SET floorRequestButton TO NEW FloorRequestButton WITH floorRequestButtonID AND OFF AND buttonFloor AND Up
-            ADD floorRequestButton TO THIS floorButtonsList
-            INCREMENT buttonFloor
-            INCREMENT floorRequestButtonID
-        ENDFOR
-    ENDSEQUENCE
-    SEQUENCE createBasementFloorRequestButtons USING _amountOfBasements
-        SET buttonFloor TO -1
-        FOR _amountOfBasements
+''        SET column TO NEW Column WITH columnID AND online AND _amountOfBasements AND _amountOfElevatorPerColumn AND servedFloors AND true
+ ''       ADD column TO THIS columnsList
+  ''      INCREMENT columnID
+   '' ENDSEQUENCE
+    'SEQUENCE createColumns USING _amountOfColumns AND _amountOfFloors AND _amountOfBasements AND _amountOfElevatorPerColumn
+     ''   SET amountOfFloorsPerColumn TO ROUND UP (_amountOfFloors / _amountOfColumns) 
+      ''  SET floor TO 1
+       '' FOR _amountOfColumns
+        ''    SET servedFloors TO EMPTY ARRAY
+         ''   FOR amountOfFloorsPerColumn
+          ''      IF floor IS LESS OR EQUAL TO _amountOfFloors
+           ''         ADD floor TO servedFloors
+            ''        INCREMENT floor
+             ''   ENDIF
+            'ENDFOR
+     ''       SET column TO NEW Column WITH columnID AND online AND _amountOfFloors AND _amountOfElevatorPerColumn AND servedFloors AND false
+      ''      ADD column TO THIS columnsList
+            'INCREMENT columnID
+       '' ENDFOR
+    'ENDSEQUENCE
+   '' SEQUENCE createFloorRequestButtons USING _amountOfFloors
+    ''    SET buttonFloor TO 1
+     ''   FOR _amountOfFloors
+      ''      SET floorRequestButton TO NEW FloorRequestButton WITH floorRequestButtonID AND OFF AND buttonFloor AND Up
+     ''         ADD floorRequestButton TO THIS floorButtonsList
+        ''    INCREMENT buttonFloor
+         ''   INCREMENT floorRequestButtonID
+        ' ENDFOR
+   '' ENDSEQUENCE
+   '' SEQUENCE createBasementFloorRequestButtons USING _amountOfBasements
+       '' SET buttonFloor TO -1
+       '' FOR _amountOfBasements
             SET floorRequestButton TO NEW FloorRequestButton WITH floorRequestButtonID AND OFF AND buttonFloor AND Down
             ADD floorRequestButton TO THIS floorButtonsList
-            DECREMENT buttonFloor
-            INCREMENT floorRequestButtonID
+        ''    DECREMENT buttonFloor
+         ''   INCREMENT floorRequestButtonID
         ENDFOR
     ENDSEQUENCE
-    SEQUENCE findBestColumn USING _requestedFloor RETURNING column
-        FOR EACH column IN THIS columnsList
-            IF column servedFloorsList CONTAINS _requestedFloor
-                RETURN column
-            ENDIF
-        ENDFOR
-    ENDSEQUENCE
+    ''SEQUENCE findBestColumn USING _requestedFloor RETURNING column
+     '   FOR EACH column IN THIS columnsList
+     ''       IF column servedFloorsList CONTAINS _requestedFloor
+      ''          RETURN column
+       ''     ENDIF
+       '' ENDFOR
+   '' ENDSEQUENCE
     '//Simulate when a user press a button at the lobby
-    SEQUENCE assignElevator USING _requestedFloor AND _direction
-        SET column TO THIS findBestColumn WITH _requestedFloor RETURNING column
-        SET elevator TO CALL column findElevator WITH 1 AND _direction RETURNING bestElevator '// The floor is always 1 because that request is always made from the lobby.
-        CALL elevator addNewRequest WITH 1
-        CALL elevator move
-        CALL elevator addNewRequest WITH _requestedFloor
-        CALL elevator move
-    ENDSEQUENCE
+  ''  SEQUENCE assignElevator USING _requestedFloor AND _direction
+       '' SET column TO THIS findBestColumn WITH _requestedFloor RETURNING column
+      ''  SET elevator TO CALL column findElevator WITH 1 AND _direction RETURNING bestElevator '// The floor is always 1 because that request is always made from the lobby.
+     ''   CALL elevator addNewRequest WITH 1
+       '' CALL elevator move
+      ''  CALL elevator addNewRequest WITH _requestedFloor
+     ''   CALL elevator move
+    'ENDSEQUENCE
 ENDDEFINE '//Battery
 DEFINE Column USING _id AND _status AND _amountOfFloors AND _amountOfElevators AND _servedFloors AND _isBasement
     '//---------------------------------Initialization--------------------------------------------//
@@ -94,30 +94,28 @@ DEFINE Column USING _id AND _status AND _amountOfFloors AND _amountOfElevators A
     '//---------------------------------Methods--------------------------------------------//
     SEQUENCE createCallButtons USING _amountOfFloors AND _isBasement
         IF _isBasement THEN
-            SET buttonFloor TO -1
-            FOR _amountOfFloors
-                SET callButton TO NEW CallButton WITH callButtonID AND OFF AND buttonFloor AND Up
-                ADD callButton TO THIS callButtonsList
-                DECREMENT buttonFloor
-                INCREMENT callButtonID
-            ENDFOR
-        ELSE
-            SET buttonFloor TO 1
-            FOR _amountOfFloors
-                SET callButton TO NEW CallButton WITH callButtonID AND OFF AND buttonFloor AND Down
-                ADD callButton TO THIS callButtonsList
-                INCREMENT buttonFloor
-                INCREMENT callButtonID
-            ENDFOR
-        ENDIF
-    ENDSEQUENCE
-    SEQUENCE createElevators USING _amountOfFloors AND _amountOfElevators 
-        FOR _amountOfElevators
-            SET elevator TO NEW Elevator WITH elevatorID AND idle AND _amountOfFloors AND 1
-            ADD elevator TO THIS elevatorsList
-            INCREMENT elevatorID
-        ENDFOR
-    ENDSEQUENCE
+       ''     SET buttonFloor TO -1
+        ''    FOR _amountOfFloors
+         ''       SET callButton TO NEW CallButton WITH callButtonID AND OFF AND buttonFloor AND Up
+            ''    ADD callButton TO THIS callButtonsList
+       ''         DECREMENT buttonFloor
+       ''     ENDFOR
+        'ELSE
+         ''   SET buttonFloor TO 1
+          ''  FOR _amountOfFloors
+             ''   SET callButton TO NEW CallButton WITH callButtonID AND OFF AND buttonFloor AND Down
+            ''    ADD callButton TO THIS callButtonsList
+            ''    INCREMENT buttonFloor
+           '' ENDFOR
+      ''  ENDIF
+ ''   ENDSEQUENCE
+    '' SEQUENCE createElevators USING _amountOfFloors AND _amountOfElevators 
+     ''    FOR _amountOfElevators
+      ''       SET elevator TO NEW Elevator WITH elevatorID AND idle AND _amountOfFloors AND 1
+       ''      ADD elevator TO THIS elevatorsList
+        ''     INCREMENT elevatorID
+        '' ENDFOR
+  ''  ENDSEQUENCE
     '//Simulate when a user press a button on a floor to go back to the first floor
     SEQUENCE requestElevator USING userPosition AND direction
         SET elevator TO CALL THIS findElevator WITH userPosition AND direction RETURNING elevator
@@ -185,18 +183,18 @@ DEFINE Column USING _id AND _status AND _amountOfFloors AND _amountOfElevators A
         ENDIF
         RETURN bestElevator
     ENDSEQUENCE
-    SEQUENCE checkIfElevatorIsBetter USING scoreToCheck AND newElevator AND bestScore AND referenceGap AND bestElevator AND floor RETURNING bestElevatorInformations
-        IF scoreToCheck IS LESS THAN bestScore THEN
-            SET bestScore TO scoreToCheck
-            SET bestElevator TO newElevator
-            SET referenceGap TO ABSOLUTE VALUE OF newElevator currentFloor - floor
-        ELSE IF bestScore EQUALS scoreToCheck
-            SET gap TO ABSOLUTE VALUE OF newElevator currentFloor - floor
-            IF referenceGap IS GREATER THAN gap THEN
-                SET bestElevator TO newElevator
-                SET referenceGap TO gap
-            ENDIF
-        ENDIF
+   '' SEQUENCE checkIfElevatorIsBetter USING scoreToCheck AND newElevator AND bestScore AND referenceGap AND bestElevator AND floor RETURNING bestElevatorInformations
+    ''    IF scoreToCheck IS LESS THAN bestScore THEN
+     ''       SET bestScore TO scoreToCheck
+      ''      SET bestElevator TO newElevator
+       ''     SET referenceGap TO ABSOLUTE VALUE OF newElevator currentFloor - floor
+        'ELSE IF bestScore EQUALS scoreToCheck
+         ''   SET gap TO ABSOLUTE VALUE OF newElevator currentFloor - floor
+          ''  IF referenceGap IS GREATER THAN gap THEN
+                'SET bestElevator TO newElevator
+                'SET referenceGap TO gap
+            'ENDIF
+        'ENDIF
         RETURN bestElevator AND bestScore AND referenceGap AS bestElevatorInformations
     ENDSEQUENCE
 ENDDEFINE '//Column
