@@ -1,5 +1,5 @@
 'SET columnID TO 1
-SET elevatorID TO 1
+'SET elevatorID TO 1
 SET floorRequestButtonID TO 1
 SET callButtonID TO 1
 INIT floor
@@ -57,8 +57,8 @@ INIT floor
    '' SEQUENCE createBasementFloorRequestButtons USING _amountOfBasements
        '' SET buttonFloor TO -1
        '' FOR _amountOfBasements
-            SET floorRequestButton TO NEW FloorRequestButton WITH floorRequestButtonID AND OFF AND buttonFloor AND Down
-            ADD floorRequestButton TO THIS floorButtonsList
+   ''         SET floorRequestButton TO NEW FloorRequestButton WITH floorRequestButtonID AND OFF AND buttonFloor AND Down
+    ''        ADD floorRequestButton TO THIS floorButtonsList
         ''    DECREMENT buttonFloor
          ''   INCREMENT floorRequestButtonID
         ENDFOR
@@ -79,21 +79,21 @@ INIT floor
       ''  CALL elevator addNewRequest WITH _requestedFloor
      ''   CALL elevator move
     'ENDSEQUENCE
-ENDDEFINE '//Battery
-DEFINE Column USING _id AND _status AND _amountOfFloors AND _amountOfElevators AND _servedFloors AND _isBasement
+'ENDDEFINE '//Battery
+'DEFINE Column USING _id AND _status AND _amountOfFloors AND _amountOfElevators AND _servedFloors AND _isBasement
     '//---------------------------------Initialization--------------------------------------------//
-    SET ID TO _id
-    SET status TO _status 
-    SET amountOfFloors TO _amountOfFloors
-    SET amountOfElevators TO _amountOfElevators
-    SET elevatorsList TO EMPTY ARRAY
-    SET callButtonsList TO EMPTY ARRAY
-    SET servedFloorsList TO _servedFloors
-    CALL THIS createElevators USING _amountOfFloors AND _amountOfElevators 
-    CALL THIS createCallButtons USING _amountOfFloors AND _isBasement
+   '' SET ID TO _id
+    'SET status TO _status 
+    'SET amountOfFloors TO _amountOfFloors
+    'SET amountOfElevators TO _amountOfElevators
+    'SET elevatorsList TO EMPTY ARRAY
+    'SET callButtonsList TO EMPTY ARRAY
+    'SET servedFloorsList TO _servedFloors
+    'CALL THIS createElevators USING _amountOfFloors AND _amountOfElevators 
+    'CALL THIS createCallButtons USING _amountOfFloors AND _isBasement
     '//---------------------------------Methods--------------------------------------------//
-    SEQUENCE createCallButtons USING _amountOfFloors AND _isBasement
-        IF _isBasement THEN
+    'SEQUENCE createCallButtons USING _amountOfFloors AND _isBasement
+     ''   IF _isBasement THEN
        ''     SET buttonFloor TO -1
         ''    FOR _amountOfFloors
          ''       SET callButton TO NEW CallButton WITH callButtonID AND OFF AND buttonFloor AND Up
@@ -134,48 +134,48 @@ DEFINE Column USING _id AND _status AND _amountOfFloors AND _amountOfElevators A
         SET referenceGap TO 10000000
         INIT bestElevatorInformations
         IF requestedFloor EQUALS 1 THEN
-            FOR EACH elevator IN THIS elevatorsList
+           '' FOR EACH elevator IN THIS elevatorsList
                 '//The elevator is at the lobby and already has some requests. It is about to leave but has not yet departed
-                IF 1 EQUALS elevator currentFloor AND elevator status EQUALS stopped THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 1 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+               '' IF 1 EQUALS elevator currentFloor AND elevator status EQUALS stopped THEN
+               ''     SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 1 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is at the lobby and has no requests
-                ELSE IF 1 EQUALS elevator currentFloor AND elevator status EQUALS idle THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 2 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+               '' ELSE IF 1 EQUALS elevator currentFloor AND elevator status EQUALS idle THEN
+                  ''  SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 2 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is lower than me and is coming up. It means that I'm requesting an elevator to go to a basement, and the elevator is on it's way to me.
-                ELSE IF 1 IS GREATER THAN elevator currentFloor AND elevator direction EQUALS up THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 3 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+                'ELSE IF 1 IS GREATER THAN elevator currentFloor AND elevator direction EQUALS up THEN
+                ''    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 3 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is above me and is coming down. It means that I'm requesting an elevator to go to a floor, and the elevator is on it's way to me
-                ELSE IF 1 IS LESS THAN elevator currentFloor AND elevator direction EQUALS down THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 3 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+               '' ELSE IF 1 IS LESS THAN elevator currentFloor AND elevator direction EQUALS down THEN
+               ''     SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 3 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is not at the first floor, but doesn't have any request
-                ELSE IF elevator status EQUALS idle THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 4 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+                'ELSE IF elevator status EQUALS idle THEN
+                 ''   SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 4 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is not available, but still could take the call if nothing better is found
-                ELSE 
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 5 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
-                ENDIF
-                SET bestElevator TO bestElevatorInformations bestElevator
-                SET bestScore TO bestElevatorInformations bestScore
-                SET referenceGap TO bestElevatorInformations referenceGap
-            ENDFOR
-        ELSE
-            FOR EACH elevator IN THIS elevatorsList
+               '' ELSE 
+                  ''  SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 5 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+              ''  ENDIF
+              ''  SET bestElevator TO bestElevatorInformations bestElevator
+              ''  SET bestScore TO bestElevatorInformations bestScore
+              ''  SET referenceGap TO bestElevatorInformations referenceGap
+           '' ENDFOR
+      ''  ELSE
+           '' FOR EACH elevator IN THIS elevatorsList
                 '//The elevator is at the same level as me, and is about to depart to the first floor
-                IF requestedFloor EQUALS elevator currentFloor AND elevator status EQUALS stopped AND requestedDirection EQUALS elevator direction THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 1 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+              ''  IF requestedFloor EQUALS elevator currentFloor AND elevator status EQUALS stopped AND requestedDirection EQUALS elevator direction THEN
+                   '' SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 1 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is lower than me and is going up. I'm on a basement, and the elevator can pick me up on it's way
-                ELSE IF requestedFloor IS GREATER THAN elevator currentFloor AND elevator direction EQUALS up AND requestedDirection EQUALS up THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 2 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+               '' ELSE IF requestedFloor IS GREATER THAN elevator currentFloor AND elevator direction EQUALS up AND requestedDirection EQUALS up THEN
+               ''     SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 2 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is higher than me and is going down. I'm on a floor, and the elevator can pick me up on it's way
-                ELSE IF requestedFloor IS LESS THAN elevator currentFloor AND elevator direction EQUALS down AND requestedDirection EQUALS down THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 2 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+              ''  ELSE IF requestedFloor IS LESS THAN elevator currentFloor AND elevator direction EQUALS down AND requestedDirection EQUALS down THEN
+               ''     SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 2 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is idle and has no requests
-                ELSE IF elevator status EQUALS idle THEN
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 4 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+              ''  ELSE IF elevator status EQUALS idle THEN
+                ''    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 4 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
                 '//The elevator is not available, but still could take the call if nothing better is found
-                ELSE 
-                    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 5 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
-                ENDIF
+                'ELSE 
+                ''    SET bestElevatorInformations TO CALL THIS checkIfElevatorIsBetter WITH 5 AND elevator AND bestScore AND referenceGap AND bestElevator AND requestedFloor RETURNING bestElevatorInformations
+               '' ENDIF
                 SET bestElevator TO bestElevatorInformations bestElevator
                 SET bestScore TO bestElevatorInformations bestScore
                 SET referenceGap TO bestElevatorInformations referenceGap
@@ -219,7 +219,7 @@ DEFINE Elevator USING _id AND _status AND _amountOfFloors AND _currentFloor
                 WHILE THIS currentFloor IS LESS THAN destination
                     INCREMENT THIS currentFloor
                     SET THIS screenDisplay TO THIS currentFloor
-                ENDWHILE
+               '' ENDWHILE
             ELSE IF THIS currentFloor IS GREATER THAN destination THEN
                 SET THIS direction TO down
                 CALL THIS sortFloorList

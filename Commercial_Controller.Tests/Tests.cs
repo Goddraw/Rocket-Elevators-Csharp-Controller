@@ -1,4 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+
 
 namespace Commercial_Controller.Tests
 {
@@ -6,7 +8,8 @@ namespace Commercial_Controller.Tests
     public class UnitTest1
     {
 
-        public void AssertElevatorsPosition(Column chosenColumn, int[] expectedFinalPositions) {
+        public void AssertElevatorsPosition(Column chosenColumn, int[] expectedFinalPositions)
+        {
             for (int i = 0; i < chosenColumn.elevatorsList.Count; i++)
             {
                 Assert.AreEqual(chosenColumn.elevatorsList[i].currentFloor, expectedFinalPositions[i], "Elevator " + chosenColumn.elevatorsList[i].ID + " didn't finish at the correct floor, expected " + expectedFinalPositions[i] + ", got " + chosenColumn.elevatorsList[0].currentFloor);
@@ -19,6 +22,11 @@ namespace Commercial_Controller.Tests
         {
             Battery battery = new Battery(1, 4, 60, 6, 5);
             Scenarios scenarios = new Scenarios();
+
+            // Console.WriteLine("dshsh");
+            // foreach(Column c in battery.columnsList) {
+            //     Console.WriteLine(c.ID);
+            // }
 
             Column expectedColumn = battery.columnsList[1];
             Elevator expectedElevator = battery.columnsList[1].elevatorsList[4];

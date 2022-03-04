@@ -5,7 +5,12 @@ namespace Commercial_Controller
 {
     public class Battery
     {
+        // Globals
+        public static int elevatorID = 1;
         public static int columnID = 1;
+        public static string alphabet = "ABCDEFGHIJKLMONPQRSTUVWXYZ";
+
+        // Instance variables
         public int ID;
         public int amountOfColumns;
         public int amountOfFloors;
@@ -20,7 +25,7 @@ namespace Commercial_Controller
         {
             this.ID = _ID;
             this.status = "online";
-            List<Column> columnList = new List<Column>();
+            this.columnsList = new List<Column>();
             List<FloorRequestButton> floorRequestButtonsList = new List<FloorRequestButton>();
             if (amountOfBasements > 0)
             {
@@ -40,7 +45,7 @@ namespace Commercial_Controller
                 servedFloorsList.Add(floor);
                 floor--;
             }
-            Column basementColumn = new Column(Battery.columnID.ToString(),
+            Column basementColumn = new Column(alphabet[Battery.columnID - 1].ToString(),
             amountOfElevatorPerColumn,
             servedFloorsList,
             true);
@@ -77,7 +82,7 @@ namespace Commercial_Controller
                         floor++;
                     }
 
-                    Column column = new Column(Battery.columnID.ToString(),
+                    Column column = new Column(alphabet[Battery.columnID - 1].ToString(),
                     amountOfElevatorPerColumn,
                     servedFloorsList,
                     false
@@ -99,15 +104,17 @@ namespace Commercial_Controller
         }
 
         public Column findBestColumn(int _requestedFloor)
-        {
+        {   
+            Column bestColumn = null;
             foreach (Column column in this.columnsList)
             {
                 if (column.servedFloorsList.Contains(_requestedFloor))
                 {
-                    return column;
+                    bestColumn = column;
+                    break;
                 }
             }
-            return null; 
+            return bestColumn;
         }
 
         // Simulate when a user press a button at the lobby

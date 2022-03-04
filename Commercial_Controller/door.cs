@@ -4,10 +4,10 @@ namespace Commercial_Controller
     {
         public int ID;
         public string status;
-        public Door()
+        public Door(int id)
         {
-            this.ID = 1;
-            this.status = "closed";  
+            ID = id;
+            status = "closed";  
         }
     }
 }
