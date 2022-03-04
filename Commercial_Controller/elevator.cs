@@ -45,16 +45,16 @@ namespace Commercial_Controller
                 {
                     direction = "down";
                     this.sortFloorList();
-                    while (this.currentFloor < destination)
+                    while (this.currentFloor > destination)
                     {
                         currentFloor--;
                         int screenDispay = this.currentFloor;
                     }
                 }
                 this.status = "stopped";
-                //this.operateDoors();
+                
                 completedRequestsList.Add(floorRequestsList[0]);
-                floorRequestsList.Remove(0);
+                floorRequestsList.RemoveAt(0);
             }
             this.status = "idle";
         }

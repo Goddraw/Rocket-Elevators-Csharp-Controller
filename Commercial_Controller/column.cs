@@ -76,11 +76,11 @@ namespace Commercial_Controller
                     {
                         bestElevatorInformations = this.checkIfElevatorIsBetter(2, elevator, bestElevatorInformations, requestedFloor);
                     }
-                    else if (1 > elevator.currentFloor && elevator.status == "up")
+                    else if (1 > elevator.currentFloor && elevator.direction == "up")
                     {
                         bestElevatorInformations = this.checkIfElevatorIsBetter(3, elevator, bestElevatorInformations, requestedFloor);
                     }
-                    else if (elevator.currentFloor < 1 && elevator.status == "up")
+                    else if (1 < elevator.currentFloor  && elevator.direction == "down")
                     {
                         bestElevatorInformations = this.checkIfElevatorIsBetter(3, elevator, bestElevatorInformations, requestedFloor);
                     }
