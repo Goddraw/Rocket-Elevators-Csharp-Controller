@@ -39,7 +39,7 @@ namespace Commercial_Controller
                 this.createBasementColumn(amountOfBasements, amountOfElevatorPerColumn);
                 amountOfColumns--;
             }
-            this.createBasementFloorRequestButtons(amountOfFloors);
+            this.createFloorRequestButtons(amountOfFloors);
             this.createColumns(amountOfColumns, amountOfFloors, amountOfBasements, amountOfElevatorPerColumn);
         }
         public void createBasementColumn(int amountOfBasements, int amountOfElevatorPerColumn)
@@ -52,13 +52,13 @@ namespace Commercial_Controller
                 floor--;
             }
             Column basementColumn = new Column(alphabet[this.columnID - 1].ToString(),
-            amountOfElevatorPerColumn,
-            servedFloorsList,
-            true);
+                amountOfElevatorPerColumn,
+                servedFloorsList,
+                true);
             this.columnsList.Add(basementColumn);
             this.columnID++;
         }
-        public void createFloorRequestButtons(int amountOfFloor)
+        public void createFloorRequestButtons(int amountOfFloors)
         {
             int buttonFloor = 1;
             FloorRequestButton floorRequestButton;
@@ -70,9 +70,9 @@ namespace Commercial_Controller
             }
         }
         public void createColumns(int amountOfColumns,
-        int amountOfFloors,
-        int amountOfBasements,
-        int amountOfElevatorsPerColumn)
+            int amountOfFloors,
+            int amountOfBasements,
+            int amountOfElevatorsPerColumn)
         {
             int amountOfFloorsPerColumn = (int)Math.Round(amountOfFloors / (double)amountOfColumns);
             int floor = 1;
@@ -81,7 +81,6 @@ namespace Commercial_Controller
                 List<int> servedFloorsList = new List<int>();
                 for (int j = 0; j < amountOfFloorsPerColumn; j++)
                 {
-
                     if (floor <= this.amountOfFloors)
                     {
                         servedFloorsList.Add(floor);

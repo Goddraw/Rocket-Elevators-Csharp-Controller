@@ -1,32 +1,65 @@
-# Rocket-Elevators-Csharp-Controller
-This is the template to use for the C# commercial controller. In the Commercial_Controller folder, you will find the classes that should be used along with some methods described in the requirements. The necessary files to run some tests are also included, in the Commercial_Controller.Tests folder.
+Rocket-Elevators-Csharp-Controller
+This my C# Residential Controller from the pseudocode. Enjoy!
 
-### Installation
+This program controls a Column of elevators.
 
-As long as you have **.NET 6.0** installed on your computer, nothing more needs to be installed:
+It sends an elevator when a user presses a call button on a floor and it takes
+a user to its desired floor when a button is pressed from the inside of the elevator. 
 
-The code to run the scenarios is included in the Commercial_Controller folder, and can be executed there with:
+The elevator selection is based on the current direction and status of every elevators. It priorizes the elevator going in the same direction the user wants to go and sends the closest one as well so that the user waits less time.
 
-`dotnet run <SCENARIO-NUMBER>`
+To be able to try the program, you need 
 
-### Running the tests
+- To create column with the parameters: id, amount of Floors and amount of Elevators
+- Set the status of the elevators (are they moving in a direction or idle?)
+- To set which floor is requested and where each elevators are.
+- Once this is done, you can decide the behaviour of each elevators and then start a scenario.
 
-To launch the tests, make sure to be at the root of the repository and run:
 
-`dotnet test`
+Here is an example of a potential test scenario for the program:
 
-With a fully completed project, you should get an output like:
+public class Scenarios
+    {
+        Battery battery = new Battery(1, 4, 60, 6, 5);
 
-![Screenshot from 2021-06-15 17-31-02](https://user-images.githubusercontent.com/28630658/122128889-3edfa500-ce03-11eb-97d0-df0cc6a79fed.png)
+        public Column moveAllElevators(Column column) {
+            
+            for (int i = 0; i < column.elevatorsList.Count; i++)
+            {
+               
+                while (column.elevatorsList[i].floorRequestsList.Count != 0)
+                {
+                     Console.WriteLine(column.elevatorsList[i].currentFloor);
+                    column.elevatorsList[i].move();
+                }
+            }
+            return column;
+        }
 
-You can also get more details about each test by adding the `-v n` flag: 
+        public Column setupElevators(Column column, List<ElevatorDetails> elevatorDetails) {
+            for (int i = 0; i < column.elevatorsList.Count; i++)
+            {
+                column.elevatorsList[i].currentFloor = elevatorDetails[i].floor;
+                column.elevatorsList[i].direction = elevatorDetails[i].direction;
+                column.elevatorsList[i].status = elevatorDetails[i].status;
+                column.elevatorsList[i].floorRequestsList = elevatorDetails[i].floorRequests;
+            }
+            return column;
+        }
 
-`dotnet test -v n` 
+                public (Column, Elevator) scenario1()
+        {
+            Column column = battery.columnsList[1];
 
-which should give something like: 
+            ElevatorDetails elevator1 = new ElevatorDetails(20,"down","moving", new List<int>{5});
+            ElevatorDetails elevator2 = new ElevatorDetails(3,"up","moving",  new List<int>{15});
+            ElevatorDetails elevator3 = new ElevatorDetails(13,"down","moving",new List<int>{1});
+            ElevatorDetails elevator4 = new ElevatorDetails(15,"down","moving", new List<int>{2});
+            ElevatorDetails elevator5 = new ElevatorDetails(6,"down","moving", new List<int>{2});
+            List<ElevatorDetails> elevatorDetails = new List<ElevatorDetails>{elevator1,elevator2,elevator3,elevator4,elevator5};
+            battery.columnsList[1] = setupElevators(column, elevatorDetails);
 
-![Screenshot from 2021-06-15 18-00-52](https://user-images.githubusercontent.com/28630658/122129140-a8f84a00-ce03-11eb-8807-33d7eab8c387.png)
-
-Make sure to only edit files in the Commercial_Controller folder. The test and scenarios files can be left in your final project. The grader will run tests similar to the ones provided.
-
-Of course, make sure to edit this Readme file to describe your own project!
+            (Column chosenColumn, Elevator chosenElevator) = battery.assignElevator(20, "up");
+            chosenColumn = moveAllElevators(chosenColumn);
+            return (chosenColumn, chosenElevator);
+        }
